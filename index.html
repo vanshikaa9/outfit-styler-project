@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Outfit</title>
+</head>
+<body>
+  <h2>Upload Outfit Image</h2>
+
+  <input type="file" id="imageInput" />
+  <input type="text" id="descriptionInput" placeholder="Enter description" />
+  <button id="uploadBtn">Upload</button>
+
+  <script>
+    const uploadBtn = document.getElementById("uploadBtn");
+
+    uploadBtn.addEventListener("click", () => {
+      const imageInput = document.getElementById("imageInput");
+      const descriptionInput = document.getElementById("descriptionInput");
+
+      if (imageInput.files.length === 0) {
+        alert("Please select an image!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", imageInput.files[0]);  // Must match backend field name
+      formData.append("description", descriptionInput.value);
+
+      fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        alert(data.message);
+      })
+      .catch(err => {
+        console.error("Upload error:", err);
+        alert("Upload failed!");
+      });
+    });
+  </script>
+</body>
+</html>
